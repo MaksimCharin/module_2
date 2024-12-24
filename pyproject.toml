@@ -22,6 +22,7 @@ build-backend = "poetry.core.masonry.api"
 [tool.mypy]
 disallow_untyped_defs = true
 warn_return_any = true
+ignore_missing_imports = true
 exclude = 'venv'
 
 [tool.black]
