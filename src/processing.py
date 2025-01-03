@@ -13,6 +13,8 @@ def filter_by_state(operations: List[dict], key_value: str = "EXECUTED") -> List
 
 def sort_by_date(operations: List[dict], reverse: Optional[bool] = True) -> List[dict]:
     """Функция сортирует список словарей по дате (значение по умолчанию - по убыванию)"""
+    if reverse is None:
+        reverse = True
     sorted_operations = sorted(operations, key=lambda each_dict: each_dict["date"], reverse=reverse)
 
     return sorted_operations
@@ -39,4 +41,4 @@ if __name__ == "__main__":
         {"id": 6, "state": "CANCELED", "date": "2024-05-02T18:35:29.512364"},
     ]
 
-    print(sort_by_date(lst_))
+    print(sort_by_date(lst_, False))
