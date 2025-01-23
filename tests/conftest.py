@@ -1,4 +1,7 @@
+from typing import List
+
 import pytest
+
 
 # Проверки для state
 @pytest.fixture
@@ -71,7 +74,7 @@ def sort_by_date_value() -> tuple:
 
 # Проверки для транзакций
 @pytest.fixture
-def transactions():
+def transactions() -> List[dict]:
     return [
         {
             "id": 939719570,

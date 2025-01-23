@@ -3,11 +3,11 @@ from typing import Iterator
 
 def filter_by_currency(transactions: list, currency: str) -> Iterator:
     """Функция возвращает итератор, который поочередно выдает транзакции по заданной валюте"""
-    yield (transaction for transaction in transactions if transaction["operationAmount"]["currency"]["name"] == currency)
+    yield (transaction for transaction in transactions if
+           transaction["operationAmount"]["currency"]["name"] == currency)
 
 
-
-def transaction_descriptions(transactions) -> Iterator:
+def transaction_descriptions(transactions: list) -> Iterator:
     """Функция-генератор, принимает на вход список словарей с транзакциями и возвращает описание каждой операции"""
 
     for transaction in transactions:

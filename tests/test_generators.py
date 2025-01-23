@@ -1,9 +1,9 @@
 import pytest
 
-from src.generators import filter_by_currency, transaction_descriptions, card_number_generator
+from src.generators import card_number_generator, filter_by_currency, transaction_descriptions
 
 
-def test_filter_by_currency(transactions):
+def test_filter_by_currency(transactions: list) -> None:
     expectation = [{
         "id": 939719570,
         "state": "EXECUTED",
@@ -41,7 +41,7 @@ def test_filter_by_currency(transactions):
         "to": "Счет 11776614605963066702"
     }], "USD", [])
 ])
-def test_filter_by_currency_no_exceptions(transactions, currency, expected):
+def test_filter_by_currency_no_exceptions(transactions: list, currency: str, expected: str) -> None:
     result = filter_by_currency(transactions, currency)
     assert list(*result) == expected
 
@@ -94,7 +94,7 @@ def test_filter_by_currency_no_exceptions(transactions, currency, expected):
     }], ["Перевод организации"]),
     ([], [])
 ])
-def test_transaction_descriptions(transactions, expected_descriptions):
+def test_transaction_descriptions(transactions: list, expected_descriptions: str) -> None:
     result = list(transaction_descriptions(transactions))
     assert result == expected_descriptions
 
@@ -106,17 +106,19 @@ def test_transaction_descriptions(transactions, expected_descriptions):
     (10, 12, ["0000 0000 0000 0010", "0000 0000 0000 0011", "0000 0000 0000 0012"]),
     (1234567890123456, 1234567890123458, ["1234 5678 9012 3456", "1234 5678 9012 3457", "1234 5678 9012 3458"])
 ])
-def test_card_number_generator(start, end, expected):
+def test_card_number_generator(start: int, end: int, expected: int) -> None:
     result = list(card_number_generator(start, end))
     assert result == expected
 
-def test_card_number_generator_empty_range():
+
+def test_card_number_generator_empty_range() -> None:
     start = 10
     end = 9
     result = list(card_number_generator(start, end))
     assert result == []
 
-def test_card_number_generator_large_range():
+
+def test_card_number_generator_large_range() -> None:
     start = 0
     end = 1000
     result = list(card_number_generator(start, end))
