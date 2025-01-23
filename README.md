@@ -42,6 +42,11 @@ if __name__ == "__main__":
 3. В директории SRC, в модуле: *processing.py* можно посмотреть работу функций по сортировке данных. Внтури модуля
 представлены значения для демонстрации работы функций (данные можно менять)
 
+
+4. В директории SRC, в модуле: *generators.py* реализованы функция-генератор для банковских карт, а так же 2 функции
+для работы с транзакциями *filter_by_currency* - позволяет поочередно отображать транзакции по заданной валюте
+и функция *transaction_descriptions* - позволяет получить краткое описание операции (примеры работы данных функций
+и тестовые значения реализованы в модуле test_generators)
 ## Тестирование
 Перед запуском тестов убедитесь, что у вас установлены все необходимые зависимости. 
 Вы можете установить их с помощью следующей команды:
@@ -71,14 +76,42 @@ pytest
 def test_get_date(date_str: str, expected: str) -> None:
     assert get_date(date_str) == expected
 ```
+```
+@pytest.mark.parametrize("start, end, expected", [
+    (0, 0, ["0000 0000 0000 0000"]),
+    (1, 1, ["0000 0000 0000 0001"]),
+    (9999999999999999, 9999999999999999, ["9999 9999 9999 9999"]),
+    (10, 12, ["0000 0000 0000 0010", "0000 0000 0000 0011", "0000 0000 0000 0012"]),
+    (1234567890123456, 1234567890123458, ["1234 5678 9012 3456", "1234 5678 9012 3457", "1234 5678 9012 3458"])
+])
+def test_card_number_generator(start: int, end: int, expected: int) -> None:
+    result = list(card_number_generator(start, end))
+    assert result == expected
+
+
+def test_card_number_generator_empty_range() -> None:
+    start = 10
+    end = 9
+    result = list(card_number_generator(start, end))
+    assert result == []
+
+
+def test_card_number_generator_large_range() -> None:
+    start = 0
+    end = 1000
+    result = list(card_number_generator(start, end))
+    assert len(result) == 1001
+    assert result[0] == "0000 0000 0000 0000"
+    assert result[-1] == "0000 0000 0000 1000"
+```
 В проекте представлена реализация юнит-тестов, которые проверяют отдельные функции и методы. 
-Находятся в директории [tests/](https://github.com/MaksimCharin/module_2/tree/feature/homework_10_2/tests)
+Находятся в директории [tests/](https://github.com/MaksimCharin/module_2/tree/feature/homework_11_1/tests)
 ## Покрытие кода тестами
 Для проверки покрытия кода тестами используйте команду:
 ```
 pytest --cov=my_module tests/
 ```
-или можно перейти по [ссылке](https://github.com/MaksimCharin/module_2/tree/feature/homework_10_2/htmlcov/index.html)
+или можно перейти по [ссылке](https://github.com/MaksimCharin/module_2/tree/feature/homework_11_1/htmlcov/index.html)
 
 
 ## Лицензия:
