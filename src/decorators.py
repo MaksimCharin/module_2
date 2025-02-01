@@ -1,12 +1,16 @@
 from functools import wraps
 
-def log(file_name=None):
+from typing import Callable, Any, Optional
+
+
+def log(file_name: Optional[str] = None) -> Callable:
     """Декоратор автоматически логирует начало и конец выполнения функции,
     а также ее результаты или возникшие ошибки. Опционально, при наличии пути файла,
     записывает логи в файл, в противном случае, выводит логи в консоль"""
-    def inner(func):
+
+    def inner(func: Callable) -> Callable:
         @wraps(func)
-        def wrapper(*args, **kwargs):
+        def wrapper(*args: Any, **kwargs: Any) -> Any:
             try:
                 result = func(*args, **kwargs)
                 message = f"{func.__name__} ok"
@@ -28,4 +32,3 @@ def log(file_name=None):
         return wrapper
 
     return inner
-
