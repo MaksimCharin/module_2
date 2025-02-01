@@ -1,6 +1,8 @@
 import os
 from typing import Any
 
+import pytest
+
 from src.decorators import log
 
 
@@ -23,10 +25,7 @@ def test_console_log_success(capsys: Any) -> None:
     def summ(a: int, b: int) -> int:
         return a + b
 
-    try:
-        summ(2, 3)
-    except TypeError:
-        pass
+    summ(2, 3)
 
     captured = capsys.readouterr()
     assert captured.out == "summ ok\n"
@@ -39,10 +38,7 @@ def test_writing_log_success() -> None:
     def summ(a: int, b: int) -> int:
         return a + b
 
-    try:
-        summ(2, 5)
-    except TypeError:
-        pass
+    summ(2, 3)
 
     with open(log_file, 'r', encoding='utf-8') as file:
         log_content = file.read()
@@ -61,10 +57,8 @@ def test_writing_log_error() -> None:
     def summ(a: int, b: int) -> int:
         return a + b
 
-    try:
-        summ(2, "5")
-    except TypeError:
-        pass
+    with pytest.raises(TypeError):
+        summ(2, "5")  # type: ignore
 
     with open(log_file, 'r', encoding='utf-8') as file:
         log_content = file.read()
