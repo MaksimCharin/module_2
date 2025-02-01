@@ -6,20 +6,6 @@ import pytest
 from src.decorators import log
 
 
-def test_console_log_error(capsys: Any) -> None:
-    @log()
-    def summ(a: int, b: int) -> int:
-        return a + b
-
-    try:
-        summ(2, '5')
-    except TypeError:
-        pass
-
-    captured = capsys.readouterr()
-    assert captured.out == "summ error: TypeError. Inputs: (2, '5'), {}\n"
-
-
 def test_console_log_success(capsys: Any) -> None:
     @log()
     def summ(a: int, b: int) -> int:
@@ -29,6 +15,18 @@ def test_console_log_success(capsys: Any) -> None:
 
     captured = capsys.readouterr()
     assert captured.out == "summ ok\n"
+
+
+def test_console_log_error(capsys: Any) -> None:
+    @log()
+    def summ(a: int, b: int) -> int:
+        return a + b
+
+    with pytest.raises(TypeError):
+        summ(2, '5')
+
+    captured = capsys.readouterr()
+    assert captured.out == "summ error: TypeError. Inputs: (2, '5'), {}\n"
 
 
 def test_writing_log_success() -> None:
