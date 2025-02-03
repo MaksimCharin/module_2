@@ -47,6 +47,10 @@ if __name__ == "__main__":
 для работы с транзакциями *filter_by_currency* - позволяет поочередно отображать транзакции по заданной валюте
 и функция *transaction_descriptions* - позволяет получить краткое описание операции (примеры работы данных функций
 и тестовые значения реализованы в модуле test_generators)
+
+
+5. В директории SRC, в модуле: *decorators.py* реалищзован декоратор *log* позволяющий записывать логи функций в файл
+или выводить информацию в консоль, в зависимости от того, было передано file_name (место для сохранения логов) или нет
 ## Тестирование
 Перед запуском тестов убедитесь, что у вас установлены все необходимые зависимости. 
 Вы можете установить их с помощью следующей команды:
@@ -103,6 +107,40 @@ def test_card_number_generator_large_range() -> None:
     assert len(result) == 1001
     assert result[0] == "0000 0000 0000 0000"
     assert result[-1] == "0000 0000 0000 1000"
+```
+Пример работы декоратора *log* с переданным file_name (ожидаем вывод ошибки в файл. для корректности разовой проверки
+необходимо закомментировать последнюю строчку и удалить файл вручную перед след. тестом)
+```
+ def test_writing_log_error() -> None:
+    log_file = "mylog.txt"
+
+    @log(log_file)
+    def summ(a: int, b: int) -> int:
+        return a + b
+
+    with pytest.raises(TypeError):
+        summ(2, "5")  # type: ignore
+
+    with open(log_file, 'r', encoding='utf-8') as file:
+        log_content = file.read()
+
+    expected_log = "summ error: TypeError. Inputs: (2, '5'), {}\n"
+    assert log_content == expected_log
+
+    # удаляет файл с содержимым, после пройденного тест
+    os.remove(log_file)   
+```
+Пример работы декоратора *log* без переданного file_name (ожидаем вывод ошибки в консоль)
+```
+@log()
+    def summ(a: int, b: int) -> int:
+        return a + b
+
+    with pytest.raises(TypeError):
+        summ(2, '5')
+
+    captured = capsys.readouterr()
+    assert captured.out == "summ error: TypeError. Inputs: (2, '5'), {}\n"
 ```
 В проекте представлена реализация юнит-тестов, которые проверяют отдельные функции и методы. 
 Находятся в директории [tests/](https://github.com/MaksimCharin/module_2/tree/feature/homework_11_1/tests)
