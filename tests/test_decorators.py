@@ -23,7 +23,7 @@ def test_console_log_error(capsys: Any) -> None:
         return a + b
 
     with pytest.raises(TypeError):
-        summ(2, '5')
+        summ(2, "5")
 
     captured = capsys.readouterr()
     assert captured.out == "summ error: TypeError. Inputs: (2, '5'), {}\n"
@@ -38,7 +38,7 @@ def test_writing_log_success() -> None:
 
     summ(2, 3)
 
-    with open(log_file, 'r', encoding='utf-8') as file:
+    with open(log_file, "r", encoding="utf-8") as file:
         log_content = file.read()
 
     expected_log = "summ ok\n"
@@ -58,7 +58,7 @@ def test_writing_log_error() -> None:
     with pytest.raises(TypeError):
         summ(2, "5")  # type: ignore
 
-    with open(log_file, 'r', encoding='utf-8') as file:
+    with open(log_file, "r", encoding="utf-8") as file:
         log_content = file.read()
 
     expected_log = "summ error: TypeError. Inputs: (2, '5'), {}\n"
