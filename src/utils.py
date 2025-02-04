@@ -1,5 +1,6 @@
 import json
 import os
+from typing import Any, Dict, Iterator, Optional
 
 from src.external_api import convert_to_rub
 
@@ -7,7 +8,7 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 JSON_DATA = os.path.join(current_dir, "..", "data", "operations.json")
 
 
-def load_transactions(file_path):
+def load_transactions(file_path: str) -> list[Any]:
     """Функция принимает на вход путь до JSON-файла и возвращает список словарей с данными о финансовых транзакциях"""
     if not os.path.exists(file_path):
         return []
@@ -23,10 +24,11 @@ def load_transactions(file_path):
 
 
 transactions = load_transactions(JSON_DATA)
-print(transactions)
+print(type(transactions))
 
 
-def gen_transactions(transactions):
+def gen_transactions(transactions: list[Any]) -> Iterator:
+    """Функция-генератор выдает поочередно транзакции по запросу"""
     for transaction in transactions:
         yield transaction
 
