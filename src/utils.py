@@ -1,6 +1,7 @@
 import json
 import os
 
+from src.external_api import convert_to_rub
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 JSON_DATA = os.path.join(current_dir, '..', 'data', 'operations.json')
