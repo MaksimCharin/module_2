@@ -2,11 +2,12 @@ import logging
 from typing import Union
 
 logger = logging.getLogger('mask_card_number')
-logger.setLevel(logging.DEBUG)
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s - %(name)s - %(levelname)s: %(message)s',
+                    filename='../logs/mask_card_account.log', encoding='utf-8',
+                    filemode='w')
 file_handler = logging.FileHandler('../logs/mask_card_account.log', encoding='utf-8')
 file_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s: %(message)s')
-file_handler.setFormatter(file_formatter)
-logger.addHandler(file_handler)
 
 
 def get_mask_card_number(crd_number: Union[str, int]) -> str:

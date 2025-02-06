@@ -6,11 +6,10 @@ from typing import Iterator, List
 from src.external_api import convert_to_rub
 
 logger = logging.getLogger('transactions')
-logger.setLevel(logging.DEBUG)
-file_handler = logging.FileHandler('../logs/transactions.log', encoding='utf-8')
-file_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s: %(message)s')
-file_handler.setFormatter(file_formatter)
-logger.addHandler(file_handler)
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s - %(name)s - %(levelname)s: %(message)s',
+                    filename='../logs/transactions.log', encoding='utf-8',
+                    filemode='w')
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 JSON_DATA = os.path.join(current_dir, '..', 'data', 'operations.json')
@@ -38,7 +37,6 @@ def load_transactions(file_path: str) -> list[str]:
 
 
 transactions = load_transactions(JSON_DATA)
-print(transactions)
 
 
 def gen_transactions(transactions: List[str]) -> Iterator:
