@@ -14,16 +14,16 @@ def log(file_name: Optional[str] = None) -> Callable:
                 result = func(*args, **kwargs)
                 message = f"{func.__name__} ok"
                 if file_name:
-                    with open(file_name, 'a', encoding='utf-8') as file:
-                        file.write(message + '\n')
+                    with open(file_name, "a", encoding="utf-8") as file:
+                        file.write(message + "\n")
                 else:
                     print(message)
                 return result
             except Exception as e:
                 message = f"{func.__name__} error: {type(e).__name__}. Inputs: {args}, {kwargs}"
                 if file_name:
-                    with open(file_name, 'a', encoding='utf-8') as file:
-                        file.write(message + '\n')
+                    with open(file_name, "a", encoding="utf-8") as file:
+                        file.write(message + "\n")
                 else:
                     print(message)
                 raise e
