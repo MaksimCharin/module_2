@@ -37,7 +37,6 @@ def get_mask_card_number(crd_number: Union[str, int]) -> str:
         logger.info("Завершение функции get_mask_card_number")
 
 
-
 def get_mask_account(acc_number: Union[str, int]) -> str:
     """Функция принимает номер аккаунта и возвращает его зашифрованное представление
     в формате: **XXXX, где XXXX - 4 последние цифры аккаунта
