@@ -6,8 +6,6 @@ logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s - %(name)s - %(levelname)s: %(message)s',
                     filename='../logs/mask_card_account.log', encoding='utf-8',
                     filemode='w')
-file_handler = logging.FileHandler('../logs/mask_card_account.log', encoding='utf-8')
-file_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s: %(message)s')
 
 
 def get_mask_card_number(crd_number: Union[str, int]) -> str:
@@ -64,7 +62,6 @@ def get_mask_account(acc_number: Union[str, int]) -> str:
     finally:
         logger.info("Завершение функции get_mask_account")
 
-    return masked_account
 
 
 if __name__ == "__main__":
