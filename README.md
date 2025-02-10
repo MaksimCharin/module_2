@@ -49,7 +49,7 @@ if __name__ == "__main__":
 и тестовые значения реализованы в модуле test_generators)
 
 
-5. В директории SRC, в модуле: *decorators.py* реалищзован декоратор *log* позволяющий записывать логи функций в файл
+5. В директории SRC, в модуле: *decorators.py* реализован декоратор *log* позволяющий записывать логи функций в файл
 или выводить информацию в консоль, в зависимости от того, было передано file_name (место для сохранения логов) или нет
 
 
@@ -57,8 +57,12 @@ if __name__ == "__main__":
 в список словарей, 2. функция по вычислению суммы транзакций в иностранной валюте)
 
 
-7. В директории SRC, в модуле *external_api.py* реализована фукнция с запросом на внешний API и получение оттуда
+7. В директории SRC, в модуле *external_api.py* реализована функция с запросом на внешний API и получение оттуда
 актуального курса валюты, в дальнейшем функция пробрасывает эти данные для вычисления суммы транзакций
+
+
+8. В директории SRC, в модулях *scv_reader* и *excel_reader* реализованы функции для работы с файлами, с расширением csv
+и xlsx. Демонстрацию работы данных функций можно посмотреть в одноименных модулях, с имеющимися входными данными
 
 
 ## Тестирование
@@ -157,6 +161,44 @@ def test_card_number_generator_large_range() -> None:
     captured = capsys.readouterr()
     assert captured.out == "summ error: TypeError. Inputs: (2, '5'), {}\n"
 ```
+Пример работы теста модуля est_csv_reader:
+```
+def test_read_valid_csv() -> None:
+    expected_result = [
+        {
+            'id': '650703',
+            'state': 'EXECUTED',
+            'date': '2023-09-05T11:30:32Z',
+            'amount': '16210',
+            'currency_name': 'Sol',
+            'currency_code': 'PEN',
+            'from': 'Счет 58803664561298323391',
+            'to': 'Счет 39745660563456619397',
+            'description': 'Перевод организации'
+        },
+        {
+            'id': '650704',
+            'state': 'EXECUTED',
+            'date': '2023-09-06T12:30:32Z',
+            'amount': '20000',
+            'currency_name': 'Dollar',
+            'currency_code': 'USD',
+            'from': 'Счет 12345678901234567890',
+            'to': 'Счет 98765432109876543210',
+            'description': 'Перевод сотруднику'
+        }
+    ]
+
+    csv_content = (
+        "id;state;date;amount;currency_name;currency_code;from;to;description\n"
+        "650703;EXECUTED;2023-09-05T11:30:32Z;16210;Sol;PEN;Счет 58803664561298323391;Счет 39745660563456619397;Перевод организации\n"
+        "650704;EXECUTED;2023-09-06T12:30:32Z;20000;Dollar;USD;Счет 12345678901234567890;Счет 98765432109876543210;Перевод сотруднику\n"
+    )
+
+    with patch('builtins.open', mock_open(read_data=csv_content)):
+        result = get_csv_data('fake_path.csv')
+        assert result == expected_result
+```
 ## Логирование
 В 2-х модулях *masks.py* и *utils.py* реализовано логирование функций.
 Проверить данный функционал можно выполнив код в футере разделов.
@@ -173,13 +215,13 @@ if __name__ == "__main__":
 ```
 
 В проекте представлена реализация юнит-тестов, которые проверяют отдельные функции и методы. 
-Находятся в директории [tests/](https://github.com/MaksimCharin/module_2/tree/feature/homework_11_1/tests)
+Находятся в директории [tests/](https://github.com/MaksimCharin/module_2/tree/feature/homework_13_1/tests)
 ## Покрытие кода тестами
 Для проверки покрытия кода тестами используйте команду:
 ```
 pytest --cov=my_module tests/
 ```
-или можно перейти по [ссылке](https://github.com/MaksimCharin/module_2/tree/feature/homework_11_1/htmlcov/index.html)
+или можно перейти по [ссылке](https://github.com/MaksimCharin/module_2/tree/feature/homework_13_1/htmlcov/index.html)
 
 
 ## Лицензия:
