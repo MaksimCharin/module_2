@@ -37,6 +37,7 @@ def test_read_valid_excel() -> None:
         result = get_excel_data('fake_path.xlsx')
         assert result == expected_result
 
+
 def test_file_not_found() -> None:
     with patch('pandas.read_excel', side_effect=FileNotFoundError):
         try:
@@ -44,6 +45,7 @@ def test_file_not_found() -> None:
             assert False
         except FileNotFoundError:
             assert True
+
 
 def test_invalid_excel_format() -> None:
     invalid_df = pd.DataFrame({'invalid_column': ['invalid data']})
@@ -54,6 +56,7 @@ def test_invalid_excel_format() -> None:
             assert False
         except Exception:
             assert True
+
 
 if __name__ == '__main__':
     test_read_valid_excel()
