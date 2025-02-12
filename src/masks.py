@@ -63,7 +63,6 @@ def get_mask_account(acc_number: Union[str, int]) -> str:
         logger.info("Завершение функции get_mask_account")
 
 
-
 if __name__ == "__main__":
     try:
         print(get_mask_card_number("1234567890123456"))  # Успешный случай
