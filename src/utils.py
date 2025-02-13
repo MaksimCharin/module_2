@@ -5,14 +5,17 @@ from typing import Iterator, List
 
 from src.external_api import convert_to_rub
 
-logger = logging.getLogger('transactions')
-logging.basicConfig(level=logging.DEBUG,
-                    format='%(asctime)s - %(name)s - %(levelname)s: %(message)s',
-                    filename='../logs/transactions.log', encoding='utf-8',
-                    filemode='w')
+logger = logging.getLogger("transactions")
+logging.basicConfig(
+    level=logging.DEBUG,
+    format="%(asctime)s - %(name)s - %(levelname)s: %(message)s",
+    filename="../logs/transactions.log",
+    encoding="utf-8",
+    filemode="w",
+)
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
-JSON_DATA = os.path.join(current_dir, '..', 'data', 'operations.json')
+JSON_DATA = os.path.join(current_dir, "..", "data", "operations.json")
 
 
 def load_transactions(file_path: str) -> list[str]:
@@ -22,7 +25,7 @@ def load_transactions(file_path: str) -> list[str]:
         return []
 
     try:
-        with open(file_path, 'r', encoding='utf-8') as file:
+        with open(file_path, "r", encoding="utf-8") as file:
             data = json.load(file)
             if not isinstance(data, list):
                 logger.error("Некорректный формат данных")
@@ -51,11 +54,11 @@ def get_transaction_amount(transaction: dict) -> str:
     """Функция принимает на вход транзакцию и возвращает сумму транзакции в рублях.
     Если транзакция была в USD или EUR, происходит конвертация суммы операции в рубли"""
     try:
-        amount = transaction.get('operationAmount', {}).get('amount')
-        code = transaction.get('operationAmount', {}).get('currency', {}).get('code')
-        id = transaction.get('id', {})
+        amount = transaction.get("operationAmount", {}).get("amount")
+        code = transaction.get("operationAmount", {}).get("currency", {}).get("code")
+        id = transaction.get("id", {})
 
-        if code == 'RUB':
+        if code == "RUB":
             return f"Сумма транзакции: {amount} руб. Код валюты: {code}, id: {id}"
         elif code in ["USD", "EUR"]:
             exchange_rate = convert_to_rub(code)
@@ -71,11 +74,3 @@ def get_transaction_amount(transaction: dict) -> str:
         raise
     finally:
         logger.info("Завершение функции get_transaction_amount")
-
-
-if __name__ == "__main__":
-    try:
-        for trans in transaction_gen:
-            print(get_transaction_amount(trans))
-    except ValueError as e:
-        print(e)

@@ -1,4 +1,6 @@
-from typing import List, Optional
+from typing import Dict, List
+
+from src.widget import get_date
 
 
 def filter_by_state(operations: List[dict], key_value: str = "EXECUTED") -> List[dict]:
@@ -11,16 +13,12 @@ def filter_by_state(operations: List[dict], key_value: str = "EXECUTED") -> List
     return filtered_operations
 
 
-def sort_by_date(operations: List[dict], reverse: Optional[bool] = True) -> List[dict]:
-    """Функция сортирует список словарей по дате (значение по умолчанию - по убыванию)"""
-    if reverse is None:
-        reverse = True
-
+def sort_by_date(operations: List[Dict], reverse: bool = True) -> List[Dict]:
+    """Сортировка транзакций по дате."""
+    valid_operations = []
     for operation in operations:
-        tuple_from_values = tuple(operation.values())
-        if "T" not in tuple_from_values[-1] or len(tuple_from_values[-1]) < 26:
-            raise ValueError("Некорректный формат даты")
+        date_str = operation.get("date")
+        if get_date(date_str) != "Некорректный формат даты":
+            valid_operations.append(operation)
 
-    sorted_operations = sorted(operations, key=lambda each_dict: each_dict["date"], reverse=reverse)
-
-    return sorted_operations
+    return sorted(valid_operations, key=lambda x: x["date"], reverse=reverse)
