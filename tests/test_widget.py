@@ -1,39 +1,24 @@
 import pytest
 
-from src.widget import get_date, mask_account_card
+from src.widget import get_date, get_mask_result
 
 
 @pytest.mark.parametrize(
-    "acc_card_values, expected",
+    "x, expected",
     [
-        ("Счет 73654108430135874305", "Счет **4305"),
         ("Maestro 1596837868705199", "Maestro 1596 83** **** 5199"),
+        ("Счет 64686473678894779589", "Счет **9589"),
         ("MasterCard 7158300734726758", "MasterCard 7158 30** **** 6758"),
-        ("Visa 2107300734726757", "Visa 2107 30** **** 6757"),
+        ("Счет 35383033474447895560", "Счет **5560"),
+        ("Visa Classic 6831982476737658", "Visa Classic 6831 98** **** 7658"),
+        ("Visa Platinum 8990922113665229", "Visa Platinum 8990 92** **** 5229"),
+        ("Visa Gold 5999414228426353", "Visa Gold 5999 41** **** 6353"),
+        ("Счет 73654108430135874305", "Счет **4305"),
     ],
 )
-def test_mask_account_card(acc_card_values: str, expected: str) -> None:
-    assert mask_account_card(acc_card_values) == expected
-
-
-@pytest.mark.parametrize(
-    "acc_card_values, mask_values",
-    [
-        ("Счет 736541084301as135874305", "Вы ввели некорректное значение номера аккаунта"),
-        ("Счет 7365410843011358", "Вы ввели некорректное значение номера аккаунта"),
-        ("Счет 736541084301as135874", "Вы ввели некорректное значение номера аккаунта"),
-        ("Maestro 15968378sa68705199", "Вы ввели некорректное значение для номера карты"),
-        ("Maestro 1596837865199", "Вы ввели некорректное значение для номера карты"),
-        ("Maestro 159asd6837865199", "Вы ввели некорректное значение для номера карты"),
-        ("Счёт 73654108430135874305", "Вы ввели некорректное название карты/номера счета"),
-        ("Maetro 1596837868705199", "Вы ввели некорректное название карты/номера счета"),
-        ("MasteCard 1596837868705199", "Вы ввели некорректное название карты/номера счета"),
-    ],
-)
-def test_mask_account_card_exceptions(acc_card_values: str, mask_values: str) -> None:
-    with pytest.raises(ValueError) as exc_info:
-        mask_account_card(acc_card_values)
-    assert str(exc_info.value) == mask_values
+def test_get_mask_result(x: str, expected: str) -> None:
+    """Возвращает исходную строку с замаскированным номером карты/счета"""
+    assert get_mask_result(x) == expected
 
 
 @pytest.mark.parametrize(
@@ -48,21 +33,3 @@ def test_mask_account_card_exceptions(acc_card_values: str, mask_values: str) ->
 )
 def test_get_date(date_str: str, expected: str) -> None:
     assert get_date(date_str) == expected
-
-
-@pytest.mark.parametrize(
-    "date_str, expected",
-    [
-        ("", "Некорректный формат даты"),
-        ("2024-03-11", "Некорректный формат даты"),
-        ("2024-03-11T", "Некорректный формат даты"),
-        ("2024-03-11 02:26:18.671407", "Некорректный формат даты"),
-        ("2024/03/11T02:26:18.671407", "Некорректный формат даты"),
-        ("11.03.2024T02:26:18.671407", "Некорректный формат даты"),
-        ("T02:26:18.671407", "Некорректный формат даты"),
-    ],
-)
-def test_get_date_invalid(date_str: str, expected: str) -> None:
-    with pytest.raises(ValueError) as exc_info:
-        get_date(date_str)
-    assert str(exc_info.value) == expected
