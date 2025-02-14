@@ -1,52 +1,29 @@
-from masks import get_mask_account, get_mask_card_number
+from datetime import datetime
+
+from src.masks import get_mask_account, get_mask_card
 
 
-def mask_account_card(input_values: str) -> str:
-    """Функция принимает строку, содержащую тип и номер карты или счета.
-    Возвращает зашифрованное значение"""
-
-    input_values_list = input_values.split()
-    input_values_name = input_values_list[0]
-
-    if input_values_name.startswith("Счет"):
-
-        if not input_values_list[-1].isdigit() or len(input_values_list[-1]) < 4:
-            return "Вы ввели некорректное значение номера аккаунта"
-        else:
-            mask_values = get_mask_account(input_values_list[-1])
-            input_values_list[-1] = mask_values
-            return " ".join(input_values_list)
-
-    elif input_values_name.startswith(("Maestro", "MasterCard", "Visa")):
-
-        if len(input_values_list[-1]) != 16 or not input_values_list[-1].isdigit():
-            return "Вы ввели некорректное значение для номера карты"
-        else:
-            mask_values = get_mask_card_number(input_values_list[-1])
-            input_values_list[-1] = mask_values
-            return " ".join(input_values_list)
-
-    else:
-        return "Вы ввели некорректное название карты/номера счета"
+def get_mask_result(string_with_info: str) -> str:
+    """Возвращает исходную строку с замаскированным номером карты/счета"""
+    division_string = string_with_info.split()
+    if division_string[0] == "Счет":
+        return f"{' '.join(division_string[:-1])} {get_mask_account(division_string[-1])}"
+    return f"{' '.join(division_string[:-1])} {get_mask_card(division_string[-1])}"
 
 
 def get_date(date_str: str) -> str:
-    """
-    Функция принимает строку с датой в формате "2024-03-11T02:26:18.671407"
-    и возвращает строку с датой в формате "ДД.ММ.ГГГГ".
-    """
-    date_list = date_str.split("T")
-    date_part = date_list[0].split("-")
+    """Форматирование даты с использованием регулярных выражений."""
+    date_formats = [
+        "%Y-%m-%dT%H:%M:%S.%f",  # JSON format
+        "%Y-%m-%dT%H:%M:%SZ",  # CSV and Excel format
+        "%Y-%m-%dT%H:%M:%S",  # General format
+    ]
 
-    dd = date_part[2]
-    mm = date_part[1]
-    yy = date_part[0]
+    for date_format in date_formats:
+        try:
+            date_obj = datetime.strptime(date_str, date_format)
+            return date_obj.strftime("%d.%m.%Y")
+        except ValueError:
+            continue
 
-    return f"{dd}.{mm}.{yy}"
-
-
-if __name__ == "__main__":
-    print(mask_account_card("Счет 73654108430135874305"))
-    print(mask_account_card("Maestro 1596837868705199"))
-    print(mask_account_card("MasterCard 7158300734726758"))
-    print(get_date("2024-03-11T02:26:18.671407"))
+    return "Некорректный формат даты"
