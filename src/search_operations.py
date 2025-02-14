@@ -32,18 +32,6 @@ def format_open_file() -> Any:
         return format_open_file()
 
 
-def filter_status(data: list) -> list:
-    """Функция для выбора статуса EXECUTED, CANCELED, PENDING"""
-    print("Введите статус, по которому необходимо выполнить фильтрацию.")
-    format_ = input("Доступные для фильтровки статусы: EXECUTED, CANCELED, PENDING\n")
-    if format_.upper() not in ["EXECUTED", "CANCELED", "PENDING"]:
-        print("Статус не корректен, введите ещё раз")
-        return filter_status(data)
-
-    data = filter_by_state(data, format_.upper())
-    return data
-
-
 def sort_transaction_by_date(data: list) -> list | dict:
     """Сортирует список транзакций"""
     sort = input("Отсортировать операции по дате? Да/Нет \n")
